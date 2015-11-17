@@ -14,62 +14,91 @@
 
 
 @section('friendsList')
+    <nav class="nav-sidebar sideBarRight">
+        <ul class="nav">
+            <li class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <a href=""><h4>Notifications <i class="glyphicon glyphicon-envelope"></i></h4></a>
+            </li>
+            <div id="collapseTwo" class="collapse">
+                <li><a href="">Message 1</a></li>
+                <li><a href="">Message 2</a></li>
 
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Friends List
-                    </a>
-                </h4>
             </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-body">
-                    <li>Friend 1</li>
-                    <li>Friend 2</li>
-                    <li>Friend 3</li>
+
+
+            <li class="nav-divider"></li>
+            <li class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <a href=""><h4>FriendsList <i class="glyphicon glyphicon-heart-empty"></i></h4></a>
+            </li>
+            <div id="collapseThree" class="collapse">
+                @for($i = 0;$i<Count($friendsList);$i++)
+                    <h4>{{$friendsList[$i]['name']}} -
+                        @if($friendsList[$i]['friendStatus'] == 0)Pending
+                        @else <a href="">Invite to lobby</a>
+                        @endif
+                    </h4>
+                @endfor
+            </div>
+            <li class="nav-divider"></li>
+            <li class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <a href=""><h4>Find Friends <i class="glyphicon glyphicon-search"></i></h4></a>
+            </li>
+            <div id="collapseFour" class="collapse">
+                <div class="input-group col-md-12">
+                    <input type="text" id="friendSearch" name="friendSearch" class="search-query form-control" placeholder="Search" />
+                    <span class="input-group-btn">
+                        <button id="friendSearchButton" class="btn btn-danger" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                    </span>
                 </div>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingTwo">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Search For Friends
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="panel-body">
-                    <div class="input-group col-md-12">
-                        <input type="text" class="  search-query form-control" placeholder="Search" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-danger" type="button">
-                                        <span class=" glyphicon glyphicon-search"></span>
-                                    </button>
-                                </span>
-                    </div>
+                <div class="users">
+
                 </div>
+
             </div>
-        </div>
-    </div>
+            <li class="nav-divider"></li>
+        </ul>
+    </nav>
 
 @stop
 
 @section('theJavaScript')
     <script>
-        function refresh_div() {
-            jQuery.ajax({
-                url:'/countQueue',
-                type:'GET',
-                success:function(results) {
-                    jQuery("#QueueCounter").html(results);
-                }
-            });
-        }
+            var allUsers = <?php echo json_encode($allUsers); ?>;
 
-        t = setInterval(refresh_div,1000);
+
+
+
+            $('#friendSearchButton').click(function(){
+                var searchValue = $('#friendSearch').val();
+                var newHtml = [];
+                for(var i = 0;i<allUsers.length;i++){
+                    if(searchValue.toLowerCase().indexOf(allUsers[i]['name']) >= 0){
+                        newHtml.push('<h4 id="user-'+allUsers[i]+'">'+allUsers[i]['name'] + ' - <a href="friendAdd/'+allUsers[i]['id']+'"> Add</a></h4>');
+                    }
+                }
+                $(".users").html(newHtml.join(""));
+
+            });
+
+
+
+
+
+
+            function refresh_div() {
+                jQuery.ajax({
+                    url:'/countQueue',
+                    type:'GET',
+                    success:function(results) {
+                        jQuery("#QueueCounter").html(results);
+                    }
+                });
+            }
+
+            t = setInterval(refresh_div,1000);
+
     </script>
 
 @stop

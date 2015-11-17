@@ -35,9 +35,9 @@ Route::get('countQueue', [
     'uses' => 'homeController@countQueue'
 ]);
 
-Route::get('friendSearch',[
+Route::get('friendAdd/{friend_Id}',[
     'middlewere' => 'auth',
-    'uses' => 'homeController@friendSearchIndex'
+    'uses' => 'FriendsController@friendAdd'
 ]);
 
 
