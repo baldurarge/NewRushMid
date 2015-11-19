@@ -6,82 +6,47 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Auth;
+use DB;
 
 class lobbyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+
+    public function inviteToLobby($id,$place){
+        echo $id;
+        echo $place;
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+
+    public function leaveQueue($id){
+
+        $lobby = $this->getLobby($id);
+        $arr = array('leader_id','second_id','third_id','forth_id','fifth_id');
+
+            DB::table('lobby')
+                ->where($arr[$lobby], $id)
+                ->update([$arr[$lobby] => 0]);
+        print_r($arr[$lobby]);
+        return redirect('home');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+
+    public function getLobby($id){
+        $arr = array('leader_id','second_id','third_id','forth_id','fifth_id');
+        $number = 99;
+        for($i = 0; $i<5; $i++){
+            $lobby = DB::table('lobby')
+                ->where($arr[$i], $id)
+                ->get();
+            if(json_decode(json_encode($lobby), true)){
+                $number = $i;
+            }
+        }
+
+        return $number;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
+
+

@@ -74,6 +74,7 @@ class FriendsController extends Controller
         $you = Auth::user();
         $this->friendAddQuery($you['id'],$id);
         $this->changeFriendStatus($you['id'],$id);
+        $this->hideFriendRequest($you['id'],$id);
 
         return redirect('home');
     }
@@ -88,6 +89,14 @@ class FriendsController extends Controller
             ->where('user_id', $friendId)
             ->where('friend_id', $yourId)
             ->update(['friendStatus' => 1]);
+    }
+
+    public function hideFriendRequest($yourID,$friendID){
+        DB::table('notifications')
+            ->where('user_id',$yourID)
+            ->where('sender_id',$friendID)
+            ->where('type',0)
+            ->update(['type' => 99]);
     }
 
 }

@@ -5,7 +5,9 @@
         </li>
         <div id="collapseTwo" class="collapse in">
             @for($i = 0;$i<Count($notifications);$i++)
-                <li id="modalToggler" type="button" data-toggle="modal" data-target="#myModal{{$i}}"><p class="text-info">{{$notifications[$i]['title']}} @if($notifications[$i]['status'] == 0)<span class="badge success"> New </span>@endif</p></li>
+                @if($notifications[$i]['type'] != 99)
+                    <li id="modalToggler" type="button" data-toggle="modal" data-target="#myModal{{$i}}"><p class="text-info">{{$notifications[$i]['title']}} @if($notifications[$i]['status'] == 0)<span class="badge success"> New </span>@endif</p></li>
+                @endif
             @endfor
         </div>
 
@@ -16,9 +18,19 @@
         </li>
         <div id="collapseThree" class="collapse">
             @for($i = 0;$i<Count($friendsList);$i++)
-                <h4>{{$friendsList[$i]['name']}} -
-                    @if($friendsList[$i]['friendStatus'] == 0)Pending
-                    @else <a href="">Invite to lobby</a>
+                <h4><a href="userInfo/{{$friendsList[$i]['friend_id']}}">{{$friendsList[$i]['name']}}</a> -
+                    @if($friendsList[$i]['friendStatus'] == 0)
+                        Pending
+                    @else
+                        @foreach($usersInSession as $userInSession)
+                            @if($userInSession->{'user_id'} == $friendsList[$i]['friend_id'])
+                                @if($userInSession->{'status'} == 1)
+                                <i class="Online">Online</i>
+                                @else
+                                Offline
+                                @endif
+                            @endif
+                        @endforeach
                     @endif
                 </h4>
             @endfor

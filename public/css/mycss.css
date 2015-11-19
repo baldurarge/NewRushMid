@@ -1,6 +1,9 @@
 html,body,.theMainContent{
     height: 100%;
 }
+.theLobby{
+    margin-top: 10px;
+}
 .sideBarLeft{
     margin-top: 50px;
 }
@@ -26,4 +29,15 @@ a{
 }
 .theTester{
     color:red;
+}
+.Online{
+    color:green;
+}
+.lobbyThumb1{
+    background-color: #ffcc00;
+}
+.lobbyDropDown{
+    background:none;
+    border:none;
+    box-shadow:none;
 }

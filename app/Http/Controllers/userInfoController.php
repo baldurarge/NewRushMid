@@ -33,6 +33,21 @@ class userInfoController extends Controller
         return view('userInfo',['user' => $user,'userYou' => $userYou]);
     }
 
+    public function sendMessage($id,Request $request){
+        $you = Auth::user();
+
+        $title = $request->input('textTitle');
+        $message = $request->input('message');
+
+        DB::table('notifications')->insert(
+            ['user_id'=> $id,'title' => $title,'body' => $message,'sender_id' => $you['id'],'type' => 11]
+        );
+
+        return redirect('home');
+    }
+
+
+
     public function editUser($id){
 
         $userYou = Auth::user()->id;

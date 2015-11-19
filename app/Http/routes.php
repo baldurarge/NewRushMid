@@ -11,6 +11,11 @@
 |
 */
 
+Route::get('sessions', [
+    'middleware' => 'auth',
+    'uses' => 'homeController@sessions'
+]);
+
 Route::get('/', function () {
     return redirect('home');
 });
@@ -18,16 +23,6 @@ Route::get('/', function () {
 Route::get('home', [
     'middleware' => 'auth',
     'uses' => 'homeController@index'
-]);
-
-Route::get('joinQueue', [
-    'middleware' => 'auth',
-    'uses' => 'homeController@joinQueue'
-]);
-
-Route::get('leaveQueue', [
-    'middleware' => 'auth',
-    'uses' => 'homeController@leaveQueue'
 ]);
 
 Route::get('countQueue', [
@@ -54,12 +49,30 @@ Route::get('userInfo/{user_id}',[
     'uses' => 'userInfoController@showInfo'
 ]);
 
+Route::get('myLogout',[
+    'middlewere' => 'auth',
+    'uses' => 'myRoutingController@logout'
+]);
+
+Route::get('leaveQueue/{id}',[
+    'middlewere' => 'auth',
+    'uses' => 'lobbyController@leaveQueue'
+]);
+
+Route::get('inviteToQueue/{id}/{place}',[
+    'middlewere' => 'auth',
+    'uses' => 'lobbyController@inviteToLobby'
+]);
+
+
+
 Route::get('userEdit/{user_id}',[
     'middlewere' => 'auth',
     'uses' => 'userInfoController@editUser'
 ]);
-
 Route::post('edituser/{id}',['middlewere'=>'auth', 'uses' => 'userInfoController@update']);
+
+Route::post('sendMessage/{id}',['middlewere'=>'auth', 'uses' => 'userInfoController@sendMessage']);
 
 
 Route::get('auth/login', 'Auth\AuthController@getLogin');
