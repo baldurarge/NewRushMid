@@ -20,15 +20,7 @@
 <body>
 <div class="theMainContent">
     <div class="col-lg-2 sideBarLeft text-left">
-        <nav class="nav-sidebar">
-            <ul class="nav">
-                <li class=""><a href="home"><h4><i class="glyphicon glyphicon-home"></i> Home</h4></a></li>
-                <li class="nav-divider"></li>
-                <li><a href=""><h4><i class="glyphicon glyphicon-user"></i> MyProfile</h4></a></li>
-                <li class="nav-divider"></li>
-                <li><a href="auth/logout"><h4><i class="glyphicon glyphicon-off"></i> Sign Out</h4></a></li>
-            </ul>
-        </nav>
+        @yield('leftSideBar')
     </div>
     <div class="col-lg-8 text-center">
         @yield('content')
@@ -36,7 +28,7 @@
     <div class="col-lg-2 text-right">
         <nav class="nav-sidebar">
             <ul class="nav">
-                @yield('friendsList')
+                @yield('rightSideBar')
             </ul>
         </nav>
     </div>
@@ -44,10 +36,7 @@
 
 
 <div class="col-lg-12 theFooter text-center">
-    <div class="footer-content">
-        <h3>RushMid.is is trademark of Baldur Arge Sveinsson</h3>
-        <h4>Copyright © Baldur Arge</h4>
-    </div>
+    @include('includers/footer')
 </div>
 </body>
 @yield('theJavaScript')

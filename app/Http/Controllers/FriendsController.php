@@ -27,18 +27,12 @@ class FriendsController extends Controller
         $friend = DB::table('users')->where('id', $friend_id)->value('name');
 
 
-
         if($friend === $you['name']){
             $this->friendAddYourSelf();
         }else{
             $this->friendAddQuery($you['id'],$friend_id);
-
-            echo "<script>
-        var friend = '<?php echo $friend ?>';
-
-        alert('$friend ' + 'Added');
-        window.location.href='../home';
-        </script>";
+            $this->sendNotification($friend_id,$you['name'],$you['id']);
+            $this->messageFriendAdded($friend);
         }
 
 
@@ -48,8 +42,23 @@ class FriendsController extends Controller
         DB::table('friendslist')->insert(
             ['user_id' => $your_id,'friend_id' => $friend_id]
         );
-        DB::table('friendsrequest')->insert(
-            ['user_id' => $your_id,'friend_id' => $friend_id]
+
+
+
+    }
+
+    public function messageFriendAdded($friend){
+        echo "<script>
+        var friend = '<?php echo $friend ?>';
+
+        alert('$friend ' + 'Added');
+        window.location.href='../home';
+        </script>";
+    }
+
+    public function sendNotification($friend_id,$senderName,$senderId){
+        DB::table('notifications')->insert(
+            ['user_id'=> $friend_id,'title' => "Friends Request",'body' => "You have a friend Request from ".$senderName,'sender_id' => $senderId]
         );
     }
 
@@ -61,69 +70,24 @@ class FriendsController extends Controller
         </script>";
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function friendAccept($id){
+        $you = Auth::user();
+        $this->friendAddQuery($you['id'],$id);
+        $this->changeFriendStatus($you['id'],$id);
+
+        return redirect('home');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function changeFriendStatus($yourId,$friendId){
+        DB::table('friendslist')
+            ->where('user_id', $yourId)
+            ->where('friend_id', $friendId)
+            ->update(['friendStatus' => 1]);
+
+        DB::table('friendslist')
+            ->where('user_id', $friendId)
+            ->where('friend_id', $yourId)
+            ->update(['friendStatus' => 1]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

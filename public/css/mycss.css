@@ -14,3 +14,16 @@ html,body,.theMainContent{
 .footer-content{
     margin-top: 100px;
 }
+/*.glyphicon-bell{
+    color:orangered;
+    font-size: 23px;
+}*/
+.text-info{
+    cursor: pointer;
+}
+a{
+    color:black;
+}
+.theTester{
+    color:red;
+}
