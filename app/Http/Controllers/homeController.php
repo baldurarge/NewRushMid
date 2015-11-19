@@ -22,6 +22,8 @@ class homeController extends Controller
         $friendsList = $this->getFriendsList($us);
 
         $lobby = $this->getLobby($us['id']);
+        $theLobby = $lobby[0]['id'];
+
         if($lobby){
             $lobby = $this->getNamesInLobby($lobby);
             for($i = 0;$i<5;$i++){
@@ -30,6 +32,7 @@ class homeController extends Controller
                 }
             }
             array_push($lobby,$lobbyLeader);
+            array_push($lobby,$theLobby);
         }
 
 

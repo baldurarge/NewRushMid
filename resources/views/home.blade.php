@@ -5,7 +5,6 @@
 @stop
 
 @section('content')
-
     <div class="col-lg-12">
         @if($lobby)
                 <div class="row theLobby col-lg-10 col-lg-offset-2">
@@ -31,9 +30,9 @@
                                                     @foreach($usersInSession as $userInSession)
                                                         @if($userInSession->{'user_id'} == $friendsList[$b]['friend_id'])
                                                             @if($userInSession->{'status'} == 1)
-                                                                <a href="inviteToQueue/{{$friendsList[$i]['friend_id']}}">{{$friendsList[$b]['name']}}</a>
+                                                                <a href="inviteToLobby/{{$friendsList[$b]['friend_id']}}/{{$lobby[6]}}">{{$friendsList[$b]['name']}}</a>
                                                             @else
-                                                            @endifaaasdasd
+                                                            @endif
                                                         @endif
                                                     @endforeach
                                                 @endif
@@ -99,7 +98,7 @@
                         <h4 class="modal-title" id="myModalLabel">{{$notifications[$i]['title']}}</h4>
                     </div>
                     <div class="modal-body">
-                        {{$notifications[$i]['body']}}
+                        {!! $notifications[$i]['body']!!}
                     </div>
                     <div class="modal-footer">
                         @if($notifications[$i]['type'] == 0)

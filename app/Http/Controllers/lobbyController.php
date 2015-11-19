@@ -12,10 +12,43 @@ use DB;
 class lobbyController extends Controller
 {
 
-    public function inviteToLobby($id,$place){
-        echo $id;
-        echo $place;
+    public function inviteToLobbyAccept($user_id,$lobby_id){
+        $lobby = DB::table('lobby')
+                ->where('id',$lobby_id)
+                ->get();
 
+        $arr = array('leader_id','second_id','third_id','forth_id','fifth_id');
+        $place = "Full";
+        for($i = 0; $i<5; $i++){
+            if($lobby[0]->{$arr[$i]} == 0){
+            $place = $arr[$i];
+            }
+        }
+
+        if($place == "Full"){
+
+        }else{
+            DB::table('lobby')
+                ->where('id',$lobby_id)
+                ->update([$place=>$user_id]);
+        }
+
+
+
+        return redirect('home');
+    }
+
+    public function inviteToLobby($user_id,$lobby_id){
+        $you = Auth::user();
+
+        $title = "Game Invite";
+        $message = $you['name']." Invited you to his lobby<br>".'<a href=inviteToQueueAccept/'.$user_id.'/'.$lobby_id.'>AcceptTheGame?</a>';
+
+        DB::table('notifications')->insert(
+            ['user_id'=> $user_id,'title' => $title,'body' => $message,'sender_id' => $you['id'],'type' => 11]
+        );
+
+        return redirect('home');
     }
 
 
@@ -27,7 +60,6 @@ class lobbyController extends Controller
             DB::table('lobby')
                 ->where($arr[$lobby], $id)
                 ->update([$arr[$lobby] => 0]);
-        print_r($arr[$lobby]);
         return redirect('home');
     }
 

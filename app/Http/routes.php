@@ -59,7 +59,12 @@ Route::get('leaveQueue/{id}',[
     'uses' => 'lobbyController@leaveQueue'
 ]);
 
-Route::get('inviteToQueue/{id}/{place}',[
+Route::get('inviteToQueueAccept/{user_id}/{lobby_id}',[
+    'middlewere' => 'auth',
+    'uses' => 'lobbyController@inviteToLobbyAccept'
+]);
+
+Route::get('inviteToLobby/{user_id}/{lobby_id}',[
     'middlewere' => 'auth',
     'uses' => 'lobbyController@inviteToLobby'
 ]);
