@@ -14,7 +14,7 @@ html,body,.theMainContent{
     padding-bottom: 100px;
     background-color: #a3c8e4;
 }
-.footer-content{
+.footer-content,.theButtons{
     margin-top: 100px;
 }
 /*.glyphicon-bell{
