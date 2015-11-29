@@ -17,8 +17,8 @@ class CreateNotifictaionsTable extends Migration
             $table->integer('user_id');
             $table->string('title');
             $table->text('body');
-            $table->integer('sender_id');
             $table->integer('type');
+            $table->integer('sender_id');
             $table->integer('status');
             $table->timestamps();
         });

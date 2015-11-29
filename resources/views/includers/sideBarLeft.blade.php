@@ -1,3 +1,4 @@
+<i>RushMid-Alpha!</i>
 <nav class="nav-sidebar">
     <ul class="nav">
         <li class=""><a href="../home"><h4><i class="glyphicon glyphicon-home"></i> Home</h4></a></li>

@@ -12,14 +12,19 @@ use Carbon\Carbon;
 
 class lobbyController extends Controller
 {
+    public $arr = array('leader_id','second_id','third_id','forth_id','fifth_id');
 
 
 
     public function createLobby($user_id){
+        $this->setYourSelfInNewLobby($user_id);
+        return redirect('home');
+    }
+
+    public function setYourSelfInNewLobby($user_id){
         DB::table('lobby')->insert(
             ['leader_id' => $user_id,'created_at' => Carbon::now(),'updated_at'=> Carbon::now()]
         );
-        return redirect('home');
     }
 
     public function inviteToLobbyAccept($user_id,$lobby_id,$note_id){
@@ -28,15 +33,15 @@ class lobbyController extends Controller
                 ->get();
         $you = Auth::user();
 
-        $arr = array('leader_id','second_id','third_id','forth_id','fifth_id');
+
         $place = "Full";
         for($i = 0; $i<5; $i++){
-            if($lobby[0]->{$arr[$i]} == 0){
-            $place = $arr[$i];
+            if($lobby[0]->{$this->arr[$i]} == 0){
+            $place = $this->arr[$i];
             }
         }
         for($i = 0; $i<5; $i++){
-            if($lobby[0]->{$arr[$i]} == $user_id){
+            if($lobby[0]->{$this->arr[$i]} == $user_id){
                 $place = "InLobby";
             }
         }
@@ -89,21 +94,45 @@ class lobbyController extends Controller
     public function leaveQueue($id){
 
         $lobby = $this->getLobby($id);
-        $arr = array('leader_id','second_id','third_id','forth_id','fifth_id');
+
 
             DB::table('lobby')
-                ->where($arr[$lobby], $id)
-                ->update([$arr[$lobby] => 0]);
+                ->where($this->arr[$lobby], $id)
+                ->update([$this->arr[$lobby] => 0]);
         return redirect('home');
+    }
+
+    public function beLeader($id,$lobby_id){
+        $lobby = $this->getLobby($id);
+
+        $leader = DB::table('lobby')
+            ->where('id',$lobby_id)
+            ->get();
+
+        $leader = json_decode(json_encode($leader), true);;
+
+        if($leader[0]['leader_id'] == 0){
+            DB::table('lobby')
+                ->where($this->arr[$lobby], $id)
+                ->update([$this->arr[$lobby] => 0]);
+
+            DB::table('lobby')
+                ->where('id', $lobby_id)
+                ->update(['leader_id' => $id]);
+        }
+
+        return redirect('home');
+
+
     }
 
 
     public function getLobby($id){
-        $arr = array('leader_id','second_id','third_id','forth_id','fifth_id');
+
         $number = 99;
         for($i = 0; $i<5; $i++){
             $lobby = DB::table('lobby')
-                ->where($arr[$i], $id)
+                ->where($this->arr[$i], $id)
                 ->get();
             if(json_decode(json_encode($lobby), true)){
                 $number = $i;
@@ -112,6 +141,33 @@ class lobbyController extends Controller
 
         return $number;
     }
+
+    public function startLookingWithGroup($lobby_id){
+
+        $lobby = DB::table('lobby')
+            ->where('id',$lobby_id)
+            ->get();
+        $lobby = json_decode(json_encode($lobby), true);
+        $count = 0;
+        for($i = 0; $i<5; $i++){
+            if($lobby[0][$this->arr[$i]] != 0){
+                $count++;
+            }
+        }
+        $this->setYourLobbyInLobbySearch($lobby_id,$count);
+
+        return redirect('home');
+
+
+
+    }
+
+    public function setYourLobbyInLobbySearch($loby_id,$count){
+        DB::table('lobbySearch')->insert(
+            ['lobby_id'=> $loby_id,'how_many' => $count,'created_at' => Carbon::now(),'updated_at'=> Carbon::now()]
+        );
+    }
+
 
 }
 

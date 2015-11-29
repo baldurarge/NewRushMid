@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLobbyTable extends Migration
+class CreateLobbySearchTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,10 @@ class CreateLobbyTable extends Migration
      */
     public function up()
     {
-        Schema::create('lobby', function (Blueprint $table) {
+        Schema::create('lobbySearch', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('leader_id');
-            $table->integer('second_id');
-            $table->integer('third_id');
-            $table->integer('forth_id');
-            $table->integer('fifth_id');
-            $table->integer('ready');
+            $table->integer('lobby_id');
+            $table->integer('how_many');
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ class CreateLobbyTable extends Migration
      */
     public function down()
     {
-        Schema::drop('lobby');
+        Schema::drop('lobbySearch');
     }
 }

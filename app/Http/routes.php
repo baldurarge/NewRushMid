@@ -25,7 +25,7 @@ Route::get('home', [
     'uses' => 'homeController@index'
 ]);
 
-Route::get('countQueue', [
+Route::get('countQueue/{lobby_id}', [
     'middleware' => 'auth',
     'uses' => 'homeController@countQueue'
 ]);
@@ -72,6 +72,20 @@ Route::get('inviteToLobby/{user_id}/{lobby_id}',[
 Route::get('createALobby/{user_id}',[
    'middlewere' => 'auth',
     'uses' => 'lobbyController@createLobby'
+]);
+
+Route::get('kickPlayer/{user_id}',[
+   'middlewere' => 'auth',
+    'uses' => 'lobbyController@leaveQueue'
+]);
+Route::get('beLeader/{user_id}/{lobby_id}',[
+    'middlewere' => 'auth',
+    'uses' => 'lobbyController@beLeader'
+]);
+
+Route::get('startLooking/{lobby_id}',[
+    'middlewere' => 'auth',
+    'uses' => 'lobbyController@startLookingWithGroup'
 ]);
 
 

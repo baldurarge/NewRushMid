@@ -12,7 +12,7 @@
                     <div class="col-lg-1"></div>
                     @for($i = 0; $i<5;$i++)
                         <div class="col-lg-2 dropdown">
-                            <div class="thumbnail" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="thumbnail" aria-haspopup="true" aria-expanded="false">
                                 @if($lobby[$i]['status'] == "leader_id")
                                 Leader
                                 @endif
@@ -20,26 +20,34 @@
                                 {{$lobby[$i]['name']}}
                                     @if($lobby[$i]['id'] == 0)
                                         @if($lobby[$i]['status'] == "leader_id")
-                                            <a class="btn btn-warning btn-xs" href=""> Become Leader</a>
+                                            <a class="btn btn-warning btn-xs" href="beLeader/{{$user['id']}}/{{$lobby[6]}}"> Become Leader</a>
                                         @else
                                             <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-success btn-xs">Invite Friend</button>
-                                            <ul class="dropdown-menu" aria-labelledby="dLabel">
+                                            <ul id="inviteUl" class="dropdown-menu" aria-labelledby="dLabel">
                                                 @foreach($friendsList as $friend)
-                                                    Hello
+                                                    @if($friend['friendStatus'] == 1)
+                                                        @foreach($usersInSession as $userInSession)
+                                                            @if($userInSession->{'user_id'} == $friend['friend_id'])
+                                                                @if($userInSession->{'status'} == 1)
+                                                                    <a href="inviteToLobby/{{$friend['friend_id']}}/{{$lobby[6]}}/">{{$friend['name']}}</a>
+                                                                @endif
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
                                                 @endforeach
                                             </ul>
                                         @endif
                                     @else
                                         @if($lobby[5] == $user['id'])
                                             @if($lobby[$i]['id'] == $user['id'])
-                                                <a href="leaveQueue/{{$user['id']}}" class="btn btn-info btn-xs">Leave Lobby</a>
+                                                <a id="leaveLobby" href="leaveQueue/{{$user['id']}}" class="btn btn-info btn-xs">Leave Lobby</a>
                                             @else
-                                                <a href="" class="btn btn-danger btn-xs">Kick Player</a>
+                                                <a href="kickPlayer/{{$lobby[$i]['id']}}" class="btn btn-danger btn-xs">Kick Player</a>
                                             @endif
 
                                         @else
                                             @if($lobby[$i]['id'] == $user['id'])
-                                                <a class="btn btn-info" href="leaveQueue/{{$user['id']}}">Leave Lobby</a>
+                                                <a id="leaveLobby" href="leaveQueue/{{$user['id']}}" class="btn btn-info btn-xs">Leave Lobby</a>
                                             @endif
                                         @endif
                                     @endif
@@ -56,7 +64,9 @@
     <div class="col-lg-12">
         <div class="col-lg-6 col-lg-offset-3">
             @if($lobby)
-            <button type="button" class="btn btn-default btn-lg btn-block">Start Searching For A Game With Your Lobby</button>
+                @if($lobby[5] == $user['id'])
+                    <a href="startLooking/{{$lobby[6]}}" type="button" class="btn btn-default btn-lg btn-block">Start Searching For A Game With Your Lobby</a>
+                @endif
             @else
             <a href="createALobby/{{$user['id']}}" type="button" class="btn btn-default btn-lg btn-block theButtons">Create a Lobby</a>
             <button type="button" class="btn btn-default btn-lg btn-block">Search For A Game</button>
@@ -125,6 +135,8 @@
     <script>
             var allUsers = <?php echo json_encode($allUsers); ?>;
 
+            var i = 0;
+
             $('#friendSearchButton').click(function(){
                 var searchValue = $('#friendSearch').val();
                 var newHtml = [];
@@ -147,9 +159,15 @@
             }
 
             window.onload = function () {
-                setTimeout(doSomething, 3.6e+6); //Then set it to run again after ten minutes
+                setTimeout(doSomething, 3.6e+6);
             };
 
+            $('#inviteUl').find('a').on('click', function() {
+                window.location = $(this).attr('href');
+            });
+            $('#leaveLobby').find('a').on('click', function() {
+                window.location = $(this).attr('href');
+            });
 
 
 
